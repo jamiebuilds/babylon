@@ -127,7 +127,7 @@ pp.parseBindingAtom = function () {
   switch (this.state.type) {
     case tt._yield:
     case tt.name:
-      return this.parseIdentifier(this.shouldAllowYieldIdentifier());
+      return this.parseBindingIdentifier();
 
     case tt.bracketL:
       const node = this.startNode();
