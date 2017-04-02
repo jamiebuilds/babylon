@@ -110,6 +110,10 @@ pp.parseStatement = function (declaration, topLevel) {
       }
       return starttype === tt._import ? this.parseImport(node) : this.parseExport(node);
 
+    case tt._module:
+      if (!declaration) this.unexpected();
+      return this.parseModule(node);
+
     case tt.name:
       if (this.state.value === "async") {
         // peek ahead and see if next token is a function
@@ -1085,4 +1089,13 @@ pp.parseImportSpecifierDefault = function (id, startPos, startLoc) {
   node.local = id;
   this.checkLVal(node.local, true, undefined, "default import specifier");
   return this.finishNode(node, "ImportDefaultSpecifier");
+};
+
+pp.parseModule = function(node) {
+  this.next();
+  if (this.match(tt.name)) {
+    node.id = this.parseBindingIdentifier();
+  }
+  node.body = this.parseBlock();
+  return this.finishNode(node, "ExperimentalModuleDeclaration");
 };
